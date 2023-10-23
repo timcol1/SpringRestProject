@@ -18,4 +18,9 @@ public class InMemTaskRepository implements TaskRepository {
     public List<Task> findAll() {
         return this.tasks;
     }
+
+    @Override
+    public void save(Task task) {
+        this.tasks.add(task);
+    }
 }
