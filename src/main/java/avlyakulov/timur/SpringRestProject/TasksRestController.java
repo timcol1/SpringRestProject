@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 @RequestMapping("api/tasks")
 @RestController
@@ -51,5 +52,10 @@ public class TasksRestController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(task);
         }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Task> handleFindTask(@PathVariable("id") UUID id) {
+        return ResponseEntity.of(this.taskRepository.findById(id));
     }
 }
