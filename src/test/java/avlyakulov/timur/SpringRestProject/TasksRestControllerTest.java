@@ -18,7 +18,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TasksRestControllerTest {
@@ -44,7 +43,7 @@ class TasksRestControllerTest {
         var tasks = List.of(new Task(UUID.randomUUID(), "Первая задача", false),
                 new Task(UUID.randomUUID(), "Вторая задача", true));
         //моделируем поведение mock объекта
-        doReturn(tasks).when(this.taskRepository).findAll();//мы возвращаем эти задачи, когда у репозитория будет вызван метод findAll().
+        Mockito.doReturn(tasks).when(this.taskRepository).findAll();//мы возвращаем эти задачи, когда у репозитория будет вызван метод findAll().
 
         // when
         var responseEntity = this.controller.handleGetAllTasks();
@@ -78,11 +77,11 @@ class TasksRestControllerTest {
                     responseEntity.getHeaders().getLocation());
             //почему здесь мы вызываем verify а в 1 методе нет. В 1 методе мы вызываем операцию чтения,
             //а тут уже мы вызываем запись.
-            verify(this.taskRepository).save(task);//Mockito проверит, что был вызван этот метод, и был передан объект
+            Mockito.verify(this.taskRepository).save(task);//Mockito проверит, что был вызван этот метод, и был передан объект
         } else {
             assertInstanceOf(Task.class, responseEntity.getBody());
         }
-        verifyNoMoreInteractions(this.taskRepository);//проверяем, чтоб больше никаких не было вызовов в наш репозиторий
+        Mockito.verifyNoMoreInteractions(this.taskRepository);//проверяем, чтоб больше никаких не было вызовов в наш репозиторий
     }
 
     @Test
@@ -93,7 +92,7 @@ class TasksRestControllerTest {
         var errorMessage = "Details is empty";
 
         //теперь нужно смоделировать поведение у Mock объекта в нашем случае messageSource и его метод getMessage()
-        doReturn(errorMessage).when(this.messageSource)
+        Mockito.doReturn(errorMessage).when(this.messageSource)
                 .getMessage("tasks.create.details.errors.not_set", new Object[0], locale);
 
         //when - вызов нашего объекта
@@ -108,7 +107,8 @@ class TasksRestControllerTest {
         assertEquals(new ErrorsPresentation(List.of(errorMessage)), responseEntity.getBody());
 
         //теперь надо убедиться не вызывалось ли у репозитория save, или проверить не вызывались ли методы вообще
-        verifyNoInteractions(this.taskRepository);
-
+        Mockito.verifyNoInteractions(this.taskRepository);
     }
+
+    // TODO: 24.10.2023 Дописать тест для метода контроллера когда он ищет 1 задачу
 }
