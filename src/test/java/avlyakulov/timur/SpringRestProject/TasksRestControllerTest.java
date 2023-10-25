@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -110,5 +111,19 @@ class TasksRestControllerTest {
         Mockito.verifyNoInteractions(this.taskRepository);
     }
 
-    // TODO: 24.10.2023 Дописать тест для метода контроллера когда он ищет 1 задачу
+    @Test
+    void handleFindTask_ReturnsValidResponseEntity() {
+        //give
+        UUID id = UUID.fromString("d01a21a4-5da8-4966-bbd5-0f72bddbf3bf");
+        Optional<Task> task = Optional.of(new Task(id, "Первая задача", true));
+        Mockito.doReturn(task).when(this.taskRepository).findById(id);
+
+        //when
+        var responseEntity = this.controller.handleFindTask(id);
+
+        //then
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(task.get(), responseEntity.getBody());
+    }
 }
