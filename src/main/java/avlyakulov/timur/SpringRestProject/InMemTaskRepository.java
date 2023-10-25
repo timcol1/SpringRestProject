@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+
 public class InMemTaskRepository implements TaskRepository {
     private final List<Task> tasks = new LinkedList<>();
 
