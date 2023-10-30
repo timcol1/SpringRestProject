@@ -41,7 +41,7 @@ class TasksRestControllerIT {
     void handleGetAllTasks_ReturnsValidResponseEntity() throws Exception {
         // given
         var requestBuilder = MockMvcRequestBuilders.get("/api/tasks")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"));
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user1", "password1"));
 
 
         /*this.taskRepository.getTasks().addAll(List.of(new Task(UUID.fromString("f69d7733-558d-46e3-90e1-e20ab7a3dd44"),
@@ -77,7 +77,7 @@ class TasksRestControllerIT {
     void handleCreateNewTask_PayloadIsValid_ReturnsValidResponseEntity() throws Exception {
         //given
         var requestBuilder = MockMvcRequestBuilders.post("/api/tasks")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user2", "password2"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -113,7 +113,7 @@ class TasksRestControllerIT {
     void handleCreateNewTask_PayloadIsInvalid_ReturnsValidResponseEntity() throws Exception {
         //given
         var requestBuilder = MockMvcRequestBuilders.post("/api/tasks")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user1", "password1"))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
