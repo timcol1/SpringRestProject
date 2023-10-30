@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@Deprecated
 public class InMemTaskRepository implements TaskRepository {
     private final List<Task> tasks = new LinkedList<>();
 
@@ -26,6 +26,11 @@ public class InMemTaskRepository implements TaskRepository {
         return this.tasks.stream()
                 .filter(task -> task.id().equals(id))
                 .findFirst();
+    }
+
+    @Override
+    public List<Task> findByApplicationUserId(UUID id) {
+        return null;
     }
 
     public List<Task> getTasks() {

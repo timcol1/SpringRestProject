@@ -27,8 +27,8 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     @Override
     public void save(Task task) {
         this.jdbcOperations.update("""
-                insert into tasks(id, details, completed) values (?, ?, ?)
-                """, new Object[]{task.id(), task.details(), task.completed()});
+                insert into tasks(id, details, completed, id_application_user) values (?, ?, ?, ?)
+                """, new Object[]{task.id(), task.details(), task.completed(), task.applicationUserId()});
     }
 
     @Override
@@ -37,9 +37,16 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     }
 
     @Override
+    public List<Task> findByApplicationUserId(UUID id) {
+        return this.jdbcOperations.query("select * from tasks where id_application_user = ?",
+                this, id);
+    }
+
+    @Override
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Task(rs.getObject("id", UUID.class),
                 rs.getString("details"),
-                rs.getBoolean("completed"));
+                rs.getBoolean("completed"),
+                rs.getObject("id_application_user", UUID.class));
     }
 }
