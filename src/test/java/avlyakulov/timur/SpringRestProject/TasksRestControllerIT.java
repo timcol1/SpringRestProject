@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,7 +40,8 @@ class TasksRestControllerIT {
     @Test
     void handleGetAllTasks_ReturnsValidResponseEntity() throws Exception {
         // given
-        var requestBuilder = MockMvcRequestBuilders.get("/api/tasks");
+        var requestBuilder = MockMvcRequestBuilders.get("/api/tasks")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"));
 
 
         /*this.taskRepository.getTasks().addAll(List.of(new Task(UUID.fromString("f69d7733-558d-46e3-90e1-e20ab7a3dd44"),
@@ -75,6 +77,7 @@ class TasksRestControllerIT {
     void handleCreateNewTask_PayloadIsValid_ReturnsValidResponseEntity() throws Exception {
         //given
         var requestBuilder = MockMvcRequestBuilders.post("/api/tasks")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -110,6 +113,7 @@ class TasksRestControllerIT {
     void handleCreateNewTask_PayloadIsInvalid_ReturnsValidResponseEntity() throws Exception {
         //given
         var requestBuilder = MockMvcRequestBuilders.post("/api/tasks")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "password"))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -129,7 +133,7 @@ class TasksRestControllerIT {
                                 {
                                     "errors" : ["Task details must be set"]
                                 }
-                                """, true)//задаем строгость, она валидируется строго
+                                """, true)//задаем строгость, оно валидируется строго
                 );
         //теперь нужно проверить что в репозитории не появилось никаких задач
         //Assertions.assertTrue(this.taskRepository.getTasks().isEmpty());
