@@ -68,7 +68,7 @@ class TasksRestControllerIT {
                                         "details" : "Вторая задача",
                                         "completed" : true
                                     }
-                                ]                                                    
+                                ]                                            
                                 """)
                 );
     }
